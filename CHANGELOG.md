@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Portfolio-standard repository docs: `CONTRIBUTING.md`/`CONTRIBUTING.de.md`,
+  `SECURITY.md`/`SECURITY.de.md`, `EXAMPLES.md`, and `server.json` (MCP Registry
+  manifest), aligning the repo with the sibling `*-mcp` servers
+- `.github/workflows/publish.yml` — OIDC PyPI publish + MCP Registry publishing
+  on `v*` tags
+
+### Changed
+- CI workflow (`.github/workflows/ci.yml`) split into `test` / `lint` / `live`
+  jobs, matching the portfolio convention (pinned ruff, matrix 3.11–3.13,
+  nightly-only live tests)
+- `pyproject.toml` aligned to portfolio standards: `requires-python >=3.11`,
+  `mcp[cli]` upper-bounded (`<2.0.0`), explicit `[tool.ruff.lint]` rule set with
+  German-typography exceptions, `testpaths`, and a `Changelog` project URL
+- READMEs link the new `EXAMPLES`, `CONTRIBUTING`, and `SECURITY` docs
+
+### Fixed
+- Restored two misnamed files committed at import: the `.gitignore` (was
+  `download`) and `.github/workflows/ci.yml` (was `geoadmin.py`)
+
 ## [0.1.0] - 2026-07-24
 
 ### Added

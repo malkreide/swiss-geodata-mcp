@@ -1,3 +1,5 @@
+> 🇨🇭 **Part of the [Swiss Public Data MCP Portfolio](https://github.com/malkreide)**
+
 # 🗺️ swiss-geodata-mcp
 
 [![CI](https://github.com/malkreide/swiss-geodata-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/malkreide/swiss-geodata-mcp/actions/workflows/ci.yml)
@@ -115,6 +117,8 @@ No API keys — Phase 1 is authentication-free.
 
 - «Is there federal data on noise exposure?» → `geo_search_layers("lärm")` → `geo_layer_info` → `geo_identify`
 
+See [EXAMPLES.md](EXAMPLES.md) for use cases grouped by audience (schools, parents, general public, developers) and a tool-selection reference table.
+
 ## Testing
 
 ```bash
@@ -146,6 +150,14 @@ swiss-geodata-mcp/
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md)
+
+## Contributing
+
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for how to report bugs, suggest a new layer, or submit code.
+
+## Security
+
+This is a read-only, no-PII, public-open-data server. See [SECURITY.md](SECURITY.md) for the security posture and how to report a vulnerability.
 
 ## License
 
