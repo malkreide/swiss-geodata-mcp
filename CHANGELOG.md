@@ -7,7 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+- **SEC-016 (0.0.0.0 binding / NeighborJack):** the HTTP transports defaulted
+  `HOST` to `0.0.0.0`, binding all interfaces. Now default to `127.0.0.1`;
+  exposing all interfaces requires an explicit `HOST=0.0.0.0`. Found by the first
+  MCP best-practice audit run.
+
 ### Added
+- MCP best-practice audit scorecard under `audits/` (25 pass / 7 partial /
+  0 fail across 32 applicable checks; production-ready). `SECURITY.md`/`.de.md`
+  now reference the report and record the accepted risks.
 - Server implementation under `src/swiss_geodata_mcp/`: the geo.admin.ch client
   (`geoadmin.py`, egress allow-list + retry + string/HTML normalisation), the
   Pydantic response envelope (`models.py`), the 9 FastMCP `geo_*` tools
