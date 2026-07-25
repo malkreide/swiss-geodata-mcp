@@ -17,26 +17,24 @@ vulnerabilities.
 ## Posture summary
 
 All tools only **query** the federal geodata infrastructure — there is no write
-path, no authentication, and no personal data. The target hardening for this
-profile is:
+path, no authentication, and no personal data. Hardening in place:
 
 | Area | Control |
 |---|---|
-| Egress | HTTPS-only allow-list to the geo.admin.ch hosts (`api3.geo.admin.ch`, `geodesy.geo.admin.ch`), enforced before every outbound request |
+| Egress | HTTPS-only allow-list to the geo.admin.ch hosts (`api3.geo.admin.ch`, `geodesy.geo.admin.ch`), enforced by `_assert_host_allowed` before every outbound request |
 | TLS | Certificate verification on by default (httpx default; never disabled) |
 | Transport | stdio by default — stdout reserved for the JSON-RPC stream |
 | Input | Pydantic v2 validation on every tool input; LV95 coordinates plausibility-checked with an actionable error pointing to `geo_convert_coordinates` |
 | Secrets | No API keys or credentials — geo.admin.ch is fully public, so there is nothing to store or leak |
-| Errors | Upstream bodies and stack traces logged to stderr only; the model sees a generic, sanitised message |
-| Stdout | Reserved for the JSON-RPC stream; logging pinned to stderr |
-| Connections | One shared `httpx.AsyncClient` for the server lifetime, not per call |
-| Tests | respx-mocked unit suite on every PR; live API tests gated to a nightly job |
+| Errors | Upstream bodies and stack traces logged to stderr only; the model sees a generic, sanitised message (`_handle_error`) |
+| Stdout | Reserved for the JSON-RPC stream; logging pinned to stderr via `basicConfig` |
+| Connections | One shared `httpx.AsyncClient` opened via the server lifespan, not per call |
+| Tests | respx-mocked unit suite on every PR (3.11/3.12/3.13); live API tests gated to a nightly job |
 
 > **Audit status:** the formal MCP best-practice audit (the `audits/` folder and
 > the pass/partial/fail scorecard used by sibling servers such as
 > `swiss-snb-mcp` and `swiss-statistics-mcp`) has **not yet been run** for this
-> server. It will be added once the implementation is in place, and this section
-> updated to reference the audit report.
+> server. This section will be updated to reference the audit report once it is.
 
 ## Accepted risks
 

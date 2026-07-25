@@ -18,26 +18,25 @@ für ausnutzbare Schwachstellen **keine** öffentlichen Issues.
 ## Zusammenfassung der Sicherheitslage
 
 Alle Tools **fragen** die Bundesgeodaten-Infrastruktur nur ab — es gibt keinen
-Schreibpfad, keine Authentifizierung und keine Personendaten. Die angestrebte
-Härtung für dieses Profil:
+Schreibpfad, keine Authentifizierung und keine Personendaten. Bereits umgesetzte
+Härtung:
 
 | Bereich | Kontrolle |
 |---|---|
-| Egress | HTTPS-erzwungene Allow-List für die geo.admin.ch-Hosts (`api3.geo.admin.ch`, `geodesy.geo.admin.ch`), vor jeder ausgehenden Anfrage durchgesetzt |
+| Egress | HTTPS-erzwungene Allow-List für die geo.admin.ch-Hosts (`api3.geo.admin.ch`, `geodesy.geo.admin.ch`), durch `_assert_host_allowed` vor jeder ausgehenden Anfrage durchgesetzt |
 | TLS | Zertifikatsprüfung standardmässig aktiv (httpx-Standard; nie deaktiviert) |
 | Transport | Standardmässig stdio — stdout ist für den JSON-RPC-Stream reserviert |
 | Input | Pydantic-v2-Validierung für jedes Tool-Input; LV95-Koordinaten werden auf Plausibilität geprüft, mit umsetzbarem Fehlerhinweis auf `geo_convert_coordinates` |
 | Secrets | Keine API-Keys oder Zugangsdaten — geo.admin.ch ist vollständig öffentlich, es gibt nichts zu speichern oder zu leaken |
-| Fehler | Upstream-Antworten und Stack-Traces werden nur nach stderr geloggt; das Modell sieht eine generische, bereinigte Meldung |
-| Stdout | Reserviert für den JSON-RPC-Stream; Logging fest auf stderr |
-| Verbindungen | Ein gemeinsamer `httpx.AsyncClient` über die Server-Lebensdauer, nicht pro Aufruf |
-| Tests | respx-mockierte Unit-Suite bei jedem PR; Live-API-Tests auf einen Nightly-Job beschränkt |
+| Fehler | Upstream-Antworten und Stack-Traces werden nur nach stderr geloggt; das Modell sieht eine generische, bereinigte Meldung (`_handle_error`) |
+| Stdout | Reserviert für den JSON-RPC-Stream; Logging via `basicConfig` fest auf stderr |
+| Verbindungen | Ein gemeinsamer `httpx.AsyncClient` über die Server-Lifespan geöffnet, nicht pro Aufruf |
+| Tests | respx-mockierte Unit-Suite bei jedem PR (3.11/3.12/3.13); Live-API-Tests auf einen Nightly-Job beschränkt |
 
 > **Audit-Status:** Das formale MCP-Best-Practice-Audit (der `audits/`-Ordner und
 > das pass/partial/fail-Scorecard, das Geschwister-Server wie `swiss-snb-mcp` und
 > `swiss-statistics-mcp` verwenden) wurde für diesen Server **noch nicht
-> durchgeführt**. Es wird ergänzt, sobald die Implementierung vorliegt, und dieser
-> Abschnitt dann auf den Audit-Bericht verweisen.
+> durchgeführt**. Dieser Abschnitt verweist auf den Audit-Bericht, sobald er vorliegt.
 
 ## Akzeptierte Risiken
 
