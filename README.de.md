@@ -101,7 +101,7 @@ SWISS_GEODATA_TRANSPORT=streamable-http PORT=8000 swiss-geodata-mcp
 | Variable | Default | Zweck |
 |---|---|---|
 | `SWISS_GEODATA_TRANSPORT` | `stdio` | `stdio` \| `streamable-http` \| `sse` |
-| `HOST` / `PORT` | `0.0.0.0` / `8000` | HTTP-Binding (nur Cloud-Transporte) |
+| `HOST` / `PORT` | `127.0.0.1` / `8000` | HTTP-Binding (nur Cloud-Transporte). Standardmässig Loopback; für Cloud-Deployments `HOST=0.0.0.0` explizit setzen, um alle Interfaces freizugeben. |
 
 Keine API-Keys — Phase 1 ist authentifizierungsfrei.
 

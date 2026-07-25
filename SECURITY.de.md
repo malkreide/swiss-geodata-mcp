@@ -2,12 +2,13 @@
 
 [🇬🇧 English Version](SECURITY.md)
 
-`swiss-geodata-mcp` folgt demselben Sicherheitsprofil wie das übrige
-[Swiss Public Data MCP Portfolio](https://github.com/malkreide): ein **rein
-lesender**, **PII-freier** MCP-Server für **öffentliche Open Data**. Dieses
-Dokument hält die angestrebte Sicherheitslage fest sowie die **akzeptierten
-Risiken** für Kontrollen, die für ein reines stdio-Profil eines
-Public-Open-Data-Servers bewusst zurückgestellt werden.
+`swiss-geodata-mcp` wurde gegen den internen MCP-Best-Practice-Audit-Katalog
+(68 Checks, 8 Kategorien) geprüft. Der jüngste Lauf
+(`audits/2026-07-25T160123-Z-swiss-geodata-mcp/`) ergab **25 pass / 7 partial /
+0 fail** über die 32 anwendbaren Checks — **produktionsreif, ohne offenes
+Finding mit Sicherheits-Impact**. Dieses Dokument fasst die Sicherheitslage
+zusammen sowie die **akzeptierten Risiken** für Kontrollen, die für dieses rein
+lesende, PII-freie Public-Open-Data-Profil bewusst zurückgestellt werden.
 
 ## Schwachstelle melden
 
@@ -25,7 +26,7 @@ Härtung:
 |---|---|
 | Egress | HTTPS-erzwungene Allow-List für die geo.admin.ch-Hosts (`api3.geo.admin.ch`, `geodesy.geo.admin.ch`), durch `_assert_host_allowed` vor jeder ausgehenden Anfrage durchgesetzt |
 | TLS | Zertifikatsprüfung standardmässig aktiv (httpx-Standard; nie deaktiviert) |
-| Transport | Standardmässig stdio — stdout ist für den JSON-RPC-Stream reserviert |
+| Transport | Standardmässig stdio — stdout für den JSON-RPC-Stream reserviert; HTTP-Transporte binden an Loopback (`127.0.0.1`), ausser `HOST=0.0.0.0` wird explizit gesetzt (SEC-016) |
 | Input | Pydantic-v2-Validierung für jedes Tool-Input; LV95-Koordinaten werden auf Plausibilität geprüft, mit umsetzbarem Fehlerhinweis auf `geo_convert_coordinates` |
 | Secrets | Keine API-Keys oder Zugangsdaten — geo.admin.ch ist vollständig öffentlich, es gibt nichts zu speichern oder zu leaken |
 | Fehler | Upstream-Antworten und Stack-Traces werden nur nach stderr geloggt; das Modell sieht eine generische, bereinigte Meldung (`_handle_error`) |
@@ -33,10 +34,15 @@ Härtung:
 | Verbindungen | Ein gemeinsamer `httpx.AsyncClient` über die Server-Lifespan geöffnet, nicht pro Aufruf |
 | Tests | respx-mockierte Unit-Suite bei jedem PR (3.11/3.12/3.13); Live-API-Tests auf einen Nightly-Job beschränkt |
 
-> **Audit-Status:** Das formale MCP-Best-Practice-Audit (der `audits/`-Ordner und
-> das pass/partial/fail-Scorecard, das Geschwister-Server wie `swiss-snb-mcp` und
-> `swiss-statistics-mcp` verwenden) wurde für diesen Server **noch nicht
-> durchgeführt**. Dieser Abschnitt verweist auf den Audit-Bericht, sobald er vorliegt.
+Die vollständigen Berichte finden Sie unter `audits/`, die Härtungshistorie in
+`CHANGELOG.md`.
+
+### Im ersten Audit-Lauf behobenes Finding
+
+**SEC-016 (0.0.0.0-Binding / NeighborJack)** — die HTTP-Transporte setzten `HOST`
+zuvor auf `0.0.0.0` und exponierten damit alle Interfaces. Behoben: Standard ist
+jetzt `127.0.0.1`; alle Interfaces freizugeben erfordert ein explizites
+`HOST=0.0.0.0`. stdio (der Standard-Transport) bindet gar nicht.
 
 ## Akzeptierte Risiken
 
