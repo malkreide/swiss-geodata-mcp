@@ -8,20 +8,20 @@ version = "0.1.0"
 description = "MCP server for the Swiss federal geodata (geo.admin.ch) — layer discovery, spatial identify, zoning, heights, coordinate conversion"
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 authors = [{ name = "malkreide" }]
 keywords = ["mcp", "model-context-protocol", "llm", "swiss-open-data", "geodata", "geo-admin", "swisstopo", "gis"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: GIS",
 ]
 dependencies = [
-    "mcp[cli]>=1.2.0",
+    "mcp[cli]>=1.28.1,<2.0.0",
     "httpx>=0.27",
     "pydantic>=2.7",
 ]
@@ -40,6 +40,7 @@ swiss-geodata-mcp = "swiss_geodata_mcp.__main__:main"
 [project.urls]
 Homepage = "https://github.com/malkreide/swiss-geodata-mcp"
 Repository = "https://github.com/malkreide/swiss-geodata-mcp"
+Changelog = "https://github.com/malkreide/swiss-geodata-mcp/blob/main/CHANGELOG.md"
 Issues = "https://github.com/malkreide/swiss-geodata-mcp/issues"
 
 [tool.hatch.build.targets.wheel]
@@ -47,8 +48,30 @@ packages = ["src/swiss_geodata_mcp"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-markers = ["live: tests against real upstream services (excluded from CI)"]
+testpaths = ["tests"]
+markers = [
+    "live: hits api3.geo.admin.ch — slow, brittle, runs only with `pytest -m live`",
+]
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+# Target the interpreter versions the project supports.
+target-version = "py311"
+
+[tool.ruff.lint]
+# Explicit rule set so a `ruff` upgrade in CI can't silently change what is
+# enforced. A config `select` fully replaces ruff's built-in defaults, so the
+# enforced set is exactly what is listed here regardless of the ruff version:
+#   E4/E7/E9 — pycodestyle errors (line length E501 is left to the formatter)
+#   F        — Pyflakes
+#   I        — import sorting (isort)
+#   UP       — pyupgrade (modern syntax, e.g. `X | None`, collections.abc)
+#   B        — flake8-bugbear
+#   C4       — flake8-comprehensions
+#   SIM      — flake8-simplify
+#   RUF      — ruff-specific rules
+select = ["E4", "E7", "E9", "F", "I", "UP", "B", "C4", "SIM", "RUF"]
+# The user-facing strings are German and use intentional typography — em/en
+# dashes (—, –), arrows (→) and the like. The ambiguous-unicode rules would
+# flag those as look-alikes, so they are disabled for this codebase.
+ignore = ["RUF001", "RUF002", "RUF003"]

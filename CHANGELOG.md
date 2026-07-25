@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Server implementation under `src/swiss_geodata_mcp/`: the geo.admin.ch client
+  (`geoadmin.py`, egress allow-list + retry + string/HTML normalisation), the
+  Pydantic response envelope (`models.py`), the 9 FastMCP `geo_*` tools
+  (`server.py`), and the dual-transport entry point (`__main__.py`) — the code
+  the repo's docs and CI already described
+- Test suite under `tests/`: respx-mocked unit tests (`test_unit.py`, CI-safe)
+  and gated live tests against geo.admin.ch (`test_live.py`, `-m live`); parsing
+  verified against live upstream shapes probed 2026-07-25
+- Portfolio-standard repository docs: `CONTRIBUTING.md`/`CONTRIBUTING.de.md`,
+  `SECURITY.md`/`SECURITY.de.md`, `EXAMPLES.md`, and `server.json` (MCP Registry
+  manifest), aligning the repo with the sibling `*-mcp` servers
+- `.github/workflows/publish.yml` — OIDC PyPI publish + MCP Registry publishing
+  on `v*` tags (version derived from the tag, or from `server.json` on manual
+  dispatch so branch dispatches don't write a branch name as the version)
+
+### Changed
+- CI workflow (`.github/workflows/ci.yml`) split into `test` / `lint` / `live`
+  jobs, matching the portfolio convention (pinned ruff, matrix 3.11–3.13,
+  nightly-only live tests)
+- `pyproject.toml` aligned to portfolio standards: `requires-python >=3.11`,
+  `mcp[cli]` upper-bounded (`<2.0.0`), explicit `[tool.ruff.lint]` rule set with
+  German-typography exceptions, `testpaths`, and a `Changelog` project URL
+- READMEs link the new `EXAMPLES`, `CONTRIBUTING`, and `SECURITY` docs
+
+### Fixed
+- Restored two misnamed files committed at import: the `.gitignore` (was
+  `download`) and `.github/workflows/ci.yml` (was `geoadmin.py`)
+
 ## [0.1.0] - 2026-07-24
 
 ### Added
