@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.malkreide/swiss-geodata-mcp",
-  "description": "Swiss federal geodata (geo.admin.ch): layer discovery, spatial identify, building zones, municipality lookup, terrain heights, coordinate conversion",
+  "description": "Swiss federal geodata (geo.admin.ch): layers, spatial identify, zoning, heights, LV95 conversion",
   "version": "0.1.0",
   "repository": {
     "url": "https://github.com/malkreide/swiss-geodata-mcp",
