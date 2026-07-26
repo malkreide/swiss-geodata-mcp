@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "swiss-geodata-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP server for the Swiss federal geodata (geo.admin.ch) — layer discovery, spatial identify, zoning, heights, coordinate conversion"
 readme = "README.md"
 license = "MIT"

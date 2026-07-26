@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-07-26
+
+### Fixed
+- MCP Registry publishing. Two issues blocked the `publish-mcp` job after the
+  PyPI upload of `0.1.0` had already succeeded:
+  - `server.json` `description` exceeded the registry's 100-character limit
+    (was 148) — shortened to 96 characters.
+  - The registry's PyPI ownership check requires the marker
+    `mcp-name: io.github.malkreide/swiss-geodata-mcp` in the published package
+    README — added as an HTML comment at the top of `README.md`/`README.de.md`.
+    Because PyPI releases are immutable, this ships as `0.1.1` so the marker
+    reaches the package README the registry validates.
+
+No functional changes to the server or its tools since `0.1.0`.
+
 ## [0.1.0] - 2026-07-26
 
 Initial release.
@@ -59,5 +74,6 @@ Initial release.
   behaviour documented in swiss-housing-mcp.
 - SearchServer swaps axes in location results: `y` = LV95 east, `x` = LV95 north.
 
-[Unreleased]: https://github.com/malkreide/swiss-geodata-mcp/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/malkreide/swiss-geodata-mcp/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/malkreide/swiss-geodata-mcp/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/malkreide/swiss-geodata-mcp/releases/tag/v0.1.0
