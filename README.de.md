@@ -1,3 +1,5 @@
+<!-- mcp-name: io.github.malkreide/swiss-geodata-mcp -->
+
 > 🇨🇭 **Teil des [Swiss Public Data MCP Portfolios](https://github.com/malkreide)**
 
 # 🗺️ swiss-geodata-mcp
