@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-27
+
+### Deprecated
+- **This server is deprecated and will be archived.** It has been consolidated
+  into [`swisstopo-mcp`](https://github.com/malkreide/swisstopo-mcp), which now
+  covers every capability offered here — including the REFRAME coordinate
+  conversion that used to be exclusive to this server.
+
+  Both servers wrapped the same `api3.geo.admin.ch` endpoints and overlapped in
+  five core tools (layer search, identify, find, height, elevation profile).
+  Two servers for one data source meant double the audits, double the CVE
+  bumps and an unclear choice for users. The analysis and the migration plan
+  are in
+  [`docs/merge-plan-swiss-geodata-mcp.md`](https://github.com/malkreide/swisstopo-mcp/blob/master/docs/merge-plan-swiss-geodata-mcp.md).
+
+  No alias-shim period is provided: the server had no external users, so a
+  compatibility layer would have been maintenance without a beneficiary.
+
+  A tool-by-tool mapping and the two behavioural differences that matter
+  (coordinate input, response shape) are documented in the README.
+
+### Changed
+- `Development Status` classifier moved to `7 - Inactive`; the PyPI and MCP
+  Registry descriptions now carry the deprecation notice.
+
 ## [0.1.1] - 2026-07-26
 
 ### Fixed

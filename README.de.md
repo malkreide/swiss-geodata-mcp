@@ -1,5 +1,23 @@
 <!-- mcp-name: io.github.malkreide/swiss-geodata-mcp -->
 
+> # ⚠️ EINGESTELLT — bitte [`swisstopo-mcp`](https://github.com/malkreide/swisstopo-mcp) verwenden
+>
+> Dieser Server wurde **in [`swisstopo-mcp`](https://github.com/malkreide/swisstopo-mcp)
+> überführt** und wird nicht mehr gepflegt. Alle Fähigkeiten sind dort
+> vorhanden — auch die einzige, die es hier exklusiv gab: die amtliche
+> REFRAME-Koordinatenumrechnung.
+>
+> **Warum:** beide Server sprachen dieselben `api3.geo.admin.ch`-Endpunkte und
+> überschnitten sich in fünf Kern-Tools (Layer-Suche, Identify, Find, Höhe,
+> Höhenprofil). Zwei Server für eine Datenquelle bedeuteten doppelte Audits,
+> doppelte CVE-Bumps und eine unklare Wahl für Nutzende. Begründung und
+> Migrationsschritte stehen in
+> [`docs/merge-plan-swiss-geodata-mcp.md`](https://github.com/malkreide/swisstopo-mcp/blob/master/docs/merge-plan-swiss-geodata-mcp.md).
+>
+> **Dieses Repository wird archiviert.** Der Code funktioniert weiterhin,
+> erhält aber keine Fixes und keine Dependency-Updates mehr. Siehe
+> [Migration](#migration-zu-swisstopo-mcp) unten.
+
 > 🇨🇭 **Teil des [Swiss Public Data MCP Portfolios](https://github.com/malkreide)**
 
 # 🗺️ swiss-geodata-mcp
@@ -173,3 +191,44 @@ MIT License — siehe [LICENSE](LICENSE). Daten: Bundesgeodaten-Infrastruktur (g
 ## Autor
 
 malkreide · [GitHub](https://github.com/malkreide)
+
+---
+
+## Migration zu `swisstopo-mcp`
+
+Server in der MCP-Client-Konfiguration ersetzen:
+
+```jsonc
+// vorher
+{ "swiss-geodata": { "command": "uvx", "args": ["swiss-geodata-mcp"] } }
+// nachher
+{ "swisstopo":     { "command": "uvx", "args": ["swisstopo-mcp"] } }
+```
+
+### Tool-Zuordnung
+
+| dieser Server | `swisstopo-mcp` | Hinweis |
+|---|---|---|
+| `geo_search_layers` | `swisstopo_search_layers` | — |
+| `geo_identify` | `swisstopo_identify_features` | — |
+| `geo_find` | `swisstopo_find_features` | — |
+| `geo_height` | `swisstopo_get_height` | — |
+| `geo_elevation_profile` | `swisstopo_elevation_profile` | nimmt einen Koordinaten-String; für LV95-Stützpunkte `coordinate_system="lv95"` setzen |
+| `geo_zoning_at` | `swisstopo_zoning_at` | der ARE-Rechtshinweis steht jetzt in jedem Ergebnis-Datensatz |
+| `geo_municipality_at` | `swisstopo_municipality_at` | BFS-Nummer heisst `bfs_commune_number` und ist auf `int` normalisiert |
+| `geo_layer_info` | `swisstopo_layer_info` | — |
+| `geo_convert_coordinates` | `swisstopo_convert_coordinates` | gleiche `direction`-Werte, gleicher REFRAME-Dienst |
+
+### Zwei relevante Unterschiede
+
+**Koordinaten.** Dieser Server war LV95-only und wies WGS84 ab. `swisstopo-mcp`
+akzeptiert bei den punktbasierten Tools **entweder** `lat`/`lon` (WGS84) **oder**
+`easting`/`northing` (LV95) — ein Paar, nicht beide. Bestehende LV95-Aufrufe
+funktionieren unverändert weiter, die Argumentnamen sind dieselben.
+
+**Antwortformat.** Dieser Server lieferte einen JSON-String (`GeoEnvelope`) mit
+den Daten unter `result`. `swisstopo-mcp` liefert ein strukturiertes
+`ToolResponse`: die Datensätze stehen unter `results` (Plural, immer eine
+Liste), daneben `count`, `match_type`, `source`, `license` und ein
+Markdown-`summary`. Code, der `result` gelesen hat, muss auf `results` umgestellt
+werden.
